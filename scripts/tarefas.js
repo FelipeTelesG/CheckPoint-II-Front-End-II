@@ -49,3 +49,4 @@ function saveTaskData(value, date) {
     localStorage.setItem("taskData", JSON.stringify(taskData))
 }
 reloadTasks()
+}
