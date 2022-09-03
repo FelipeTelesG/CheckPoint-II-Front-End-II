@@ -42,16 +42,54 @@ input {
   border-radius: .2em;
 }
 
+input.valid {
+  /* Altera a cor da borda */
+  border: 2px solid rgba(0, 128, 0, 0.2);
+  
+  /* Altera a cor da sombra */
+  box-shadow: 0 0 3px rgba(0, 128, 0, 0.2);
+}
+
+input.invalid {
+  /* Altera a cor da borda */
+  border: 2px solid rgba(255, 0, 0, 0.2);
+  
+  /* Altera a cor da sombra */
+  box-shadow: 0 0 3px rgba(255, 0, 0, 0.2);
+}
+
 input:focus {
   outline: none;
   border: 1px solid lightgrey;
+}
+
+
+.form-control.error small{
+  color: #DB5A5A;
+  visibility: visible;
+}
+
+.form-control i {
+  position: absolute;
+  top: 45px;
+  right: 10px;
+  visibility: hidden;
+}
+
+.form-control small {
+  visibility: hidden;
+  position: absolute;
+  margin-top: 5px;
+  font-size: 12px;
+  margin-bottom: 4px;
+
 }
 
 label {
   width: 100%;
   font-weight: 300;
   margin-bottom: -.1em;
-  margin-top: 1em;
+  margin-top: 2em;
   font-size: .8em;
 }
 
@@ -89,3 +127,4 @@ button {
   align-items: center;
   justify-content: center;
 }
+

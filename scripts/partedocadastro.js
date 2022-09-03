@@ -14,7 +14,6 @@ const liberaBotao = [false, false, false, false, false];
 
 const objeto = {};
 
-
 botao.addEventListener("click", (evento) => {
 
     evento.preventDefault();
