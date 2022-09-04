@@ -127,17 +127,26 @@ repetirsenha.addEventListener("blur", (evento) => {
         
     }
 
-    if(objeto.senha === objeto.repetirsenha) liberaBotao[4] = true;
+    if(objeto.senha === objeto.repetirsenha) liberaBotao[4] = true ;
     else liberaBotao[4] = false;
 
     console.log("tem email",repetirSenhaCapturado )
     console.log("tem email obj", objeto)
 
+    
 
         console.log(liberaBotao)
 
       if(liberaBotao.every(item => item)) botao.removeAttribute("disabled"); 
       else botao.setAttribute("disabled" , "disabled"); 
 
+    function salvarCadastro(){
+     localStorage.setItem('objeto', JSON.stringify(objeto));
+    }
+
+   
+ 
 });
+
+     
 
