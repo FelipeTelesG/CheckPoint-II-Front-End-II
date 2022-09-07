@@ -102,6 +102,11 @@ button {
   font-size: 1em;
 }
 
+button[disabled]{
+  background-color: gray;
+  opacity: 0.7;
+}
+
 .form-header {
   color: grey;
   font-size: 2em;

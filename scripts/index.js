@@ -1,58 +1,69 @@
 let botao = document.getElementById("botao");
 
-botao.addEventListener("click", (event) =>{
-    event.preventDefault();
+let email = document.getElementById("inputEmail");
+let emailClean = email.value.trim();
 
-    botao.setAttribute("disable", "")
-    
-    let email = document.getElementById("inputEmail");
-    let senha = document.getElementById("inputPassword");
+let senha = document.getElementById("inputPassword");
+let senhaClean = senha.value.trim();
 
-    let emailClean = email.value.trim();
-    let senhaClean = senha.value.trim();
+let dadosUser = localStorage.getItem('objeto');
+// transformar em objeto novamente
+let dadosUserObj = JSON.parse(dadosUser);
 
-    let emailRegex = /\S+@\S+\.\S+/;
-    let validaEmail = emailRegex.test(emailClean);
+let senhaUsuario = dadosUserObj.senha;
+let emailUsuario = dadosUserObj.email;
 
-    let dadosUser = localStorage.getItem('objeto');
-    // transformar em objeto novamente
-    let dadosUserObj = JSON.parse(dadosUser);
+function desativaBotao(emailClean, senhaClean) {
+  if (emailClean == '' || senhaClean == '') {
+    botao.disabled = true;
+  }
+  else {
+    botao.disabled = false;
+  }
+}
 
+function verificaEmail() {
+  let email = document.getElementById("inputEmail");
+  let emailClean = email.value.trim();
+  let emailRegex = /\S+@\S+\.\S+/;
+  let validaEmail = emailRegex.test(emailClean);
 
-    if(emailClean == '' || validaEmail == false || emailClean !== dadosUserObj.email){
-      email.classList.remove("valid")
-      email.classList.add("invalid")
-      setErrorFor(email, "Email Invalido")
-    }
-    else{
-      email.classList.remove("invalid")
-      email.classList.add("valid")
-      setSuccessFor(email)
-    }
+  if (emailClean == '' || validaEmail == false) {
+    email.classList.remove("valid")
+    email.classList.add("invalid")
+    setErrorFor(email, "Email Invalido")
+  }
+  else {
+    email.classList.remove("invalid")
+    email.classList.add("valid")
+    setSuccessFor(email)
+  }
+}
 
-    if(senhaClean == '' || senhaClean.length < 5 || senhaClean !== dadosUserObj.senha){
-      senha.classList.remove("valid")
-      senha.classList.add("invalid")
-      setErrorFor(senha, "Senha Invalida") 
+function verificaSenha() {
+  let senha = document.getElementById("inputPassword");
+  let senhaClean = senha.value.trim();
+  let senhaUsuario = dadosUserObj.senha
 
-    }
-    else{
-      senha.classList.remove("invalid")
-      senha.classList.add("valid")
-      setSuccessFor(senha) 
-      entrar()
-    }
+  if (senhaClean == '' || senhaClean.length < 5 || senhaClean !== senhaUsuario) {
+    senha.classList.remove("valid")
+    senha.classList.add("invalid")
+    setErrorFor(senha, "Senha Invalida")
+    botao.disabled = true
+  }
+  else {
+    senha.classList.remove("invalid")
+    senha.classList.add("valid")
+    setSuccessFor(senha)
+    botao.disabled = false
+  }
+}
 
-    function entrar(){
-      if(senhaClean === dadosUserObj.senha && emailClean === dadosUserObj.email){
-        window.location.href = "./tarefas.html"
-      }
-    }
-
-console.log(emailClean)
-console.log(senhaClean)
-
-})
+function entrar(senhaClean, senhaUsuario, emailClean, emailUsuario) {
+  if (senhaClean === senhaUsuario && emailClean === emailUsuario) {
+    window.location.href = "./tarefas.html"
+  }
+}
 
 function setErrorFor(input, message) {
   const formControl = input.parentElement;
