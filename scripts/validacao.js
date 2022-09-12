@@ -21,17 +21,23 @@ function vazio(texto) {
     return true;
 }
 
-function ValidateEmail(mail) 
-{
- if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
-  {
-    return (true)
-  }
-   
-    return (false)
+function ValidateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+        return (true)
+    }
+
+    return (false);
+}
+function Verificarsenha(senha) {
+    var passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    if (senha.match(passw)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 
 
-
-export { removeespaco, vazio, ValidateEmail };
+export { removeespaco, vazio, ValidateEmail, Verificarsenha };
