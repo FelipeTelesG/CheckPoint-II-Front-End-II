@@ -44,7 +44,6 @@ function verificaSenha() {
   let senha = document.getElementById("inputPassword");
   let senhaClean = senha.value.trim();
   let senhaUsuario = dadosUserObj.senha
-
   if (senhaClean == '' || senhaClean.length < 5 || senhaClean !== senhaUsuario) {
     senha.classList.remove("valid")
     senha.classList.add("invalid")
