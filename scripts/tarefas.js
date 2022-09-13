@@ -11,6 +11,15 @@ window.onload = () => {
     let button = document.querySelector("button")
     const taskData = []
 
+    function loadingAnimation() {
+    divTasks.setAttribute("id", "skeleton")
+    ulDone.setAttribute("id", "skeleton")
+        setTimeout(()=>{
+            divTasks.removeAttribute("id")
+            ulDone.removeAttribute("id")
+    }, 1000)
+    }
+    loadingAnimation()
     button.addEventListener('click', addButtonEvents)
 
     function addButtonEvents(event) {
