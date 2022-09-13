@@ -52,7 +52,9 @@ window.onload = () => {
         changingTitleBackground()
     }
     function createTasks(name, timestamp, done) {
-        timestamp = new Date().toUTCString();
+        if (!timestamp) {
+            timestamp = new Date().toUTCString();
+        }
         let liElement = document.createElement("li")
         liElement.classList.add("tarefa")
         liElement.setAttribute("id", `${taskData.length - 1}`)
