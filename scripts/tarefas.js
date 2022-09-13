@@ -9,15 +9,26 @@ window.onload = () => {
     let divTasks = document.querySelector(".divTasks");
     let novaTarefa = document.getElementById("novaTarefa")
     let button = document.querySelector("button")
+    let tituloTerminadas = document.querySelector(".titulo-terminadas")
     const taskData = []
 
     function loadingAnimation() {
-    divTasks.setAttribute("id", "skeleton")
-    ulDone.setAttribute("id", "skeleton")
-        setTimeout(()=>{
+        divTasks.setAttribute("id", "skeleton")
+        ulDone.setAttribute("id", "skeleton")
+        setTimeout(() => {
             divTasks.removeAttribute("id")
             ulDone.removeAttribute("id")
-    }, 1000)
+        }, 1000)
+    }
+    function changingTitleBackground() {
+        if (ulDone.children.length == 0) {
+            tituloTerminadas.style.backgroundColor = "white"
+            tituloTerminadas.style.color = "rgb(170, 170, 170)"
+        }
+        else {
+            tituloTerminadas.style.backgroundColor = "#7b90f6"; tituloTerminadas.style.color = "white"
+
+        }
     }
     loadingAnimation()
     button.addEventListener('click', addButtonEvents)
@@ -38,6 +49,7 @@ window.onload = () => {
         else {
             console.log("sem elemento para puxar");
         }
+        changingTitleBackground()
     }
     function createTasks(name, timestamp, done) {
         timestamp = new Date().toUTCString();
@@ -52,7 +64,7 @@ window.onload = () => {
               <p class="timestamp">Criada em: ${timestamp}</p>
             </div>
           `
-        if (done) { 
+        if (done) {
             ulDone.append(liElement)
             liElement.style.textDecoration = "line-through"
         }
@@ -72,12 +84,14 @@ window.onload = () => {
             localStorage.setItem("taskData", JSON.stringify(taskData))
         }
         else {
-        currentLi.style.textDecoration = 'line-through'
-        ulDone.append(currentLi)
-        taskData[`${currentLi.id}`].done = true;
-        localStorage.removeItem("taskData")
-        localStorage.setItem("taskData", JSON.stringify(taskData))
-    }
+            currentLi.style.textDecoration = 'line-through'
+            ulDone.append(currentLi)
+            taskData[`${currentLi.id}`].done = true;
+            localStorage.removeItem("taskData")
+            localStorage.setItem("taskData", JSON.stringify(taskData))
+
+        }
+        changingTitleBackground()
     }
     function saveTaskData(value, date) {
         date = new Date().toUTCString();
