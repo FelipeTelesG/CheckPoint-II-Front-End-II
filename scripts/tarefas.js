@@ -34,8 +34,8 @@ window.onload = () => {
     button.addEventListener('click', addButtonEvents)
 
     function addButtonEvents(event) {
-        saveTaskData(novaTarefa.value, 'timestamp')
-        createTasks(novaTarefa.value, 'timestamp')
+        saveTaskData(novaTarefa.value,)
+        createTasks(novaTarefa.value,)
         event.preventDefault()
     }
     function reloadTasks() {
