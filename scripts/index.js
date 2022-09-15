@@ -1,18 +1,5 @@
 let botao = document.getElementById("botao");
 
-let email = document.getElementById("inputEmail");
-let emailClean = email.value.trim();
-
-let senha = document.getElementById("inputPassword");
-let senhaClean = senha.value.trim();
-
-let dadosUser = localStorage.getItem('objeto');
-// transformar em objeto novamente
-let dadosUserObj = JSON.parse(dadosUser);
-
-let senhaUsuario = dadosUserObj.senha;
-let emailUsuario = dadosUserObj.email;
-
 function desativaBotao(emailClean, senhaClean) {
   if (emailClean == '' || senhaClean == '') {
     botao.disabled = true;
@@ -21,6 +8,21 @@ function desativaBotao(emailClean, senhaClean) {
     botao.disabled = false;
   }
 }
+
+let email = document.getElementById("inputEmail");
+let emailClean = email.value.trim();
+
+let senha = document.getElementById("inputPassword");
+let senhaClean = senha.value.trim();
+
+
+let loginUsuario = {
+  email: "",
+  password:""
+}
+
+let loginUsuarioJson = "";
+
 
 function verificaEmail() {
   let email = document.getElementById("inputEmail");
@@ -40,12 +42,15 @@ function verificaEmail() {
   }
 }
 
-function verificaSenha() {
+
+function verificaSenha(loginUsuario) {
   let senha = document.getElementById("inputPassword");
   let senhaClean = senha.value.trim();
-  let senhaUsuario = dadosUserObj.senha
+  let email = document.getElementById("inputEmail");
+  let emailClean = email.value.trim();
+  
 
-  if (senhaClean == '' || senhaClean.length < 5 || senhaClean !== senhaUsuario) {
+  if (senhaClean == '' || senhaClean.length < 5 ) {
     senha.classList.remove("valid")
     senha.classList.add("invalid")
     setErrorFor(senha, "Senha Invalida")
@@ -59,11 +64,71 @@ function verificaSenha() {
   }
 }
 
-function entrar(senhaClean, senhaUsuario, emailClean, emailUsuario) {
-  if (senhaClean === senhaUsuario && emailClean === emailUsuario) {
-    window.location.href = "./tarefas.html"
-  }
+function entrar(){
+let email = document.getElementById("inputEmail");
+let emailClean = email.value.trim();
+
+let senha = document.getElementById("inputPassword");
+let senhaClean = senha.value.trim();
+
+  loginUsuario.email = emailClean
+  loginUsuario.password = senhaClean
+
+  loginUsuarioJson = JSON.stringify(loginUsuario);
+  console.log(loginUsuarioJson)
+
+  loginApi(loginUsuarioJson);
 }
+
+function baseUrl(){
+  return "https://ctd-todo-api.herokuapp.com/v1"
+}
+
+function loginApi(loginUsuarioJson){
+
+  let request = {
+    method: "POST",
+    headers:{
+      'Content-type':'application/json'
+    },
+    body: loginUsuarioJson
+  }
+
+  fetch(`${baseUrl()}/users/login`, request)
+    .then(
+        function (resultado){
+          if(resultado.status == 200 || resultado.status == 201){
+            return resultado.json()
+          }
+          else{
+            throw resultado
+          }
+        }
+      )
+      .then(
+        function (resultado){
+          loginSucesso(resultado)
+        }
+      )
+      .catch(
+        function(erro){
+          loginErro(erro)
+        }
+      )
+}
+
+function loginSucesso(resultado){
+  console.log(resultado)
+}
+
+function loginErro(resultado){
+  senha.classList.remove("valid")
+  senha.classList.add("invalid")
+  email.classList.remove("valid")
+  email.classList.add("invalid")
+  setErrorFor(senha, "Usuário ou senha Incorretos")
+}
+
 
 function setErrorFor(input, message) {
   const formControl = input.parentElement;
@@ -79,5 +144,4 @@ function setSuccessFor(input) {
 
   formControl.className = 'form-control success'
 }
-
 

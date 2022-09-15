@@ -1,10 +1,5 @@
 window.onload = () => {
-let userLogin = document.getElementById("usuario");
-let dadosUser = localStorage.getItem('objeto');
-// transformar em objeto novamente
-let dadosUserObj = JSON.parse(dadosUser);
-let userName = dadosUserObj.nome
-userLogin.innerHTML = userName
+
 
 let divTasks = document.querySelector(".divTasks");
 let novaTarefa = document.getElementById("novaTarefa")
