@@ -43,13 +43,10 @@ function verificaEmail() {
 }
 
 
-function verificaSenha(loginUsuario) {
+function verificaSenha() {
   let senha = document.getElementById("inputPassword");
   let senhaClean = senha.value.trim();
-  let email = document.getElementById("inputEmail");
-  let emailClean = email.value.trim();
   
-
   if (senhaClean == '' || senhaClean.length < 5 ) {
     senha.classList.remove("valid")
     senha.classList.add("invalid")
