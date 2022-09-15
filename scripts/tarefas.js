@@ -38,6 +38,7 @@ window.onload = () => {
         createTasks(novaTarefa.value,)
         event.preventDefault()
     }
+    // O RELOADTASK UTILIZARÁ O MÉTODO GET PARA LISTAR TAREFAS
     function reloadTasks() {
         if (localStorage.getItem("taskData")) {
             let localTaskData = JSON.parse(localStorage.getItem("taskData"))
@@ -51,6 +52,7 @@ window.onload = () => {
         }
         changingTitleBackground()
     }
+
     function createTasks(name, timestamp, done) {
         if (!timestamp) {
             timestamp = new Date().toUTCString();
@@ -75,7 +77,15 @@ window.onload = () => {
         }
         liElement.addEventListener('click', doneTask)
         document.forms[0].reset()
+        /**
+         * {
+        "description": "Aprender Javascript",
+        "completed": false
+        }
+         */
+
     }
+    
     function doneTask(event) {
         let currentLi = event.currentTarget
         if (taskData[`${currentLi.id}`].done) {
