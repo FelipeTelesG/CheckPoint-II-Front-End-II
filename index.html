@@ -53,17 +53,96 @@
     function handleCredentialResponse(response) {
       const data = jwt_decode(response.credential)
   
-      let nome = data.name;
+      let firstName = data.given_name;
+      let lastName = data.family_name;
+      let email = data.email;
+      let password = data.sub;
       let foto = data.picture;
 
-      console.log(data);
-      console.log(nome)
-      console.log(foto)
+  //Realizar Login Google
 
-      if(data.email_verified == true){
-        window.location.href = "./tarefas.html"
+  let loginGoogle = {
+    email: "",
+    password:""
+  }
+
+  loginGoogle.email = email
+  loginGoogle.password = password
+
+  let loginUsuarioGoogleJson = "";
+
+  loginUsuarioGoogleJson = JSON.stringify(loginGoogle);
+
+
+  function loginApi(loginUsuarioGoogleJson){
+    let request = {
+      method: "POST",
+      headers:{
+        'Content-type':'application/json'
+      },
+      body: loginUsuarioGoogleJson
+  }
+
+fetch(`${baseUrl()}/users/login`, request)
+  .then(
+      function (resultado){
+        if(resultado.status == 200 || resultado.status == 201){
+          return resultado.json()
+        }
+        else{
+          throw resultado
+        }
       }
+    )
+    .then(
+      function (resultado){
+       console.log(resultado)
+      }
+    )
+    .catch(
+      function(erro){
+        console.log(erro)
+      }
+    )
+  }
+
+     //Cadastrar Usuário utilizando o Google
+
+     let dadosCadastro = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password
+      }
+      dadosCadastroJson = JSON.stringify(dadosCadastro);
+
+      let request = {
+      method: "POST",
+      headers:{
+      'Content-type':'application/json'
+    },
+    body: dadosCadastroJson
+  }
+
+  fetch(`${baseUrl()}/users`, request)
+    .then(
+        function (resultado){
+          if(resultado.status == 200 || resultado.status == 201){
+            return resultado.json()
+          }
+          else{
+            loginApi(loginUsuarioGoogleJson)
+          }
+        }
+      ).catch(
+        function(erro){
+          console.log(erro)
+        }
+      )
     }
+    
+    //API Google
+
     window.onload = function () {
       google.accounts.id.initialize({
         client_id: "291852147015-cs2j5mtk5robg1s8m1bi12ijf4opfanp.apps.googleusercontent.com",
@@ -74,6 +153,10 @@
         { theme: "outline", size: "large" }  // customization attributes
       );
       google.accounts.id.prompt(); // also display the One Tap dialog
+    }
+
+    function baseUrl(){
+      return "https://ctd-todo-api.herokuapp.com/v1"
     }
 </script>
 </body>
