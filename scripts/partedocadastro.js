@@ -2,7 +2,6 @@ import { removeespaco, vazio, ValidateEmail, Verificarsenha } from "./validacao.
 
 
 const botao = document.getElementById("botao");
-
 const Nome = document.getElementById("Nome");
 const sobrenome = document.getElementById("Sobrenome");
 const email = document.getElementById("Email");
