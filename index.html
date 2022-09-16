@@ -15,6 +15,7 @@
   <script src="https://unpkg.com/jwt-decode/build/jwt-decode.js"></script>
   <script src="./scripts/index.js" defer></script>
   
+  
 </head>
 
 <body>
@@ -59,6 +60,9 @@
       let password = data.sub;
       let foto = data.picture;
 
+      sessionStorage.setItem("nome", `${firstName } ${ lastName}`)
+      sessionStorage.setItem("foto", `${foto}`)
+
   //Realizar Login Google
 
   let loginGoogle = {
@@ -97,6 +101,8 @@ fetch(`${baseUrl()}/users/login`, request)
     .then(
       function (resultado){
        console.log(resultado)
+       sessionStorage.setItem("jwt", resultado.jwt)
+        window.location = "tarefas.html"
       }
     )
     .catch(

@@ -1,10 +1,18 @@
 window.onload = () => {
-    // let userLogin = document.getElementById("usuario");
-    // let dadosUser = localStorage.getItem('objeto');
-    // transformar em objeto novamente
-    // let dadosUserObj = JSON.parse(dadosUser);
-    // let userName = dadosUserObj.nome
-    // userLogin.innerHTML = userName
+
+    let nomeUser = sessionStorage.getItem("nome")
+    let fotoUser = sessionStorage.getItem("foto")
+    let campoNome = document.getElementById("usuario")
+
+    campoNome.innerHTML = nomeUser
+
+    let img = document.createElement("IMG");
+     img.src = fotoUser;
+     img.style.width = "2em";
+     img.style.height = "2em";
+     img.style.borderRadius = "50%";
+     document.querySelector('.user-image').appendChild(img);
+
     let ulDone = document.querySelector(".tarefas-terminadas")
     let divTasks = document.querySelector(".divTasks");
     let novaTarefa = document.getElementById("novaTarefa")
