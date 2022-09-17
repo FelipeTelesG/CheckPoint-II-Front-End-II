@@ -29,13 +29,9 @@ function ValidateEmail(mail) {
     return (false);
 }
 function Verificarsenha(senha) {
-    var passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    if (senha.match(passw)) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    var passw = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/;
+
+    return passw.test(senha)
 }
 
 
