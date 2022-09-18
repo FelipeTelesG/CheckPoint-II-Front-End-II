@@ -104,7 +104,9 @@ function loginApi(loginUsuarioJson){
       )
       .then(
         function (resultado){
-          loginSucesso(resultado)
+          console.log(resultado);
+          sessionStorage.setItem("jwt", JSON.stringify(resultado.jwt))
+          window.location = "tarefas.html"
         }
       )
       .catch(
@@ -112,10 +114,6 @@ function loginApi(loginUsuarioJson){
           loginErro(erro)
         }
       )
-}
-
-function loginSucesso(resultado){
-  console.log(resultado)
 }
 
 function loginErro(resultado){
@@ -141,4 +139,3 @@ function setSuccessFor(input) {
 
   formControl.className = 'form-control success'
 }
-

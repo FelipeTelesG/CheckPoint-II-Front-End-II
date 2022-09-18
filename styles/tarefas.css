@@ -33,13 +33,18 @@ a {
   border-radius: 50%;
   background-color: white;
   opacity: .6;
-  margin-left: .7em;
+  transition: 1s;
+  margin-left: .9em;
 }
-
+.user-info:hover .user-image {
+  opacity: 1;
+  transition: 200ms;
+}
 #imagem-user{
-  width: auto;
-  height: auto;
-  padding: 2px;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  transition: 1s;
 }
 
 #closeApp{
