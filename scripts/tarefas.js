@@ -1,24 +1,31 @@
 window.onload = () => {
 
-    let nomeUser = sessionStorage.getItem("nome")
-    let fotoUser = sessionStorage.getItem("foto")
-    let campoNome = document.getElementById("usuario")
-
-    campoNome.innerHTML = nomeUser
-
-    let img = document.createElement("IMG");
-     img.src = fotoUser;
-     img.style.width = "2em";
-     img.style.height = "2em";
-     img.style.borderRadius = "50%";
-     document.querySelector('.user-image').appendChild(img);
-
     let ulDone = document.querySelector(".tarefas-terminadas")
     let divTasks = document.querySelector(".divTasks");
     let novaTarefa = document.getElementById("novaTarefa")
-    let button = document.querySelector("button")
+   
     let tituloTerminadas = document.querySelector(".titulo-terminadas")
-    const taskData = []
+    
+    let closeApp = document.querySelector("#closeApp")
+    closeApp.addEventListener('click', endSession)
+    
+    let button = document.querySelector("button")
+    button.addEventListener('click', addButtonEvents)
+
+    let token = JSON.parse(sessionStorage.getItem('jwt'))
+    let imagemUser = document.querySelector("#imagem-user")
+    imagemUser.src = "https://tm.ibxk.com.br/2017/06/22/22100428046161.jpg"
+
+    function baseUrl() {
+        return "https://ctd-todo-api.herokuapp.com/v1"
+    }
+    
+    function endSession(event) {
+        event.preventDefault;
+        sessionStorage.clear()
+        location = "index.html"
+        
+    }
 
     function loadingAnimation() {
         divTasks.setAttribute("id", "skeleton")
@@ -38,34 +45,20 @@ window.onload = () => {
 
         }
     }
-    loadingAnimation()
-    button.addEventListener('click', addButtonEvents)
 
     function addButtonEvents(event) {
-        saveTaskData(novaTarefa.value,)
-        createTasks(novaTarefa.value,)
         event.preventDefault()
+        sendTasks(novaTarefa.value)
     }
     function reloadTasks() {
-        if (localStorage.getItem("taskData")) {
-            let localTaskData = JSON.parse(localStorage.getItem("taskData"))
-            localTaskData.forEach(element => {
-                taskData.push(element)
-                createTasks(element.name, element.date, element.done)
-            });
-        }
-        else {
-            console.log("sem elemento para puxar");
-        }
         changingTitleBackground()
+        getTasks()
     }
-    function createTasks(name, timestamp, done) {
-        if (!timestamp) {
-            timestamp = new Date().toUTCString();
-        }
+
+    function createTasks(name, timestamp, done, id) {
         let liElement = document.createElement("li")
         liElement.classList.add("tarefa")
-        liElement.setAttribute("id", `${taskData.length - 1}`)
+        liElement.setAttribute("id", `${id}`)
         liElement.innerHTML =
             `
             <div class="not-done"></div>
@@ -74,9 +67,10 @@ window.onload = () => {
               <p class="timestamp">Criada em: ${timestamp}</p>
             </div>
           `
-        if (done) {
+        if (done == true) {
             ulDone.append(liElement)
             liElement.style.textDecoration = "line-through"
+            liElement.classList.add("done")
         }
         else {
             divTasks.append(liElement)
@@ -84,37 +78,128 @@ window.onload = () => {
         liElement.addEventListener('click', doneTask)
         document.forms[0].reset()
     }
+   
     function doneTask(event) {
         let currentLi = event.currentTarget
-        if (taskData[`${currentLi.id}`].done) {
-            currentLi.style.textDecoration = "none"
-            divTasks.append(currentLi)
-            taskData[`${currentLi.id}`].done = false
-            localStorage.removeItem("taskData")
-            localStorage.setItem("taskData", JSON.stringify(taskData))
+        currentLi.classList.toggle("done")
+        let taskContent = (currentLi.childNodes[3]).childNodes[1].innerHTML;
+        let body = JSON.stringify({
+            description: taskContent,
+            completed: currentLi.classList.contains("done")
+        })
+        let request = {
+            method: 'PUT',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            },
+            body: body,
+            redirect: 'follow'
         }
-        else {
-            currentLi.style.textDecoration = 'line-through'
-            ulDone.append(currentLi)
-            taskData[`${currentLi.id}`].done = true;
-            localStorage.removeItem("taskData")
-            localStorage.setItem("taskData", JSON.stringify(taskData))
+        fetch(`${baseUrl()}/tasks/${currentLi.id}`, request)
+            .then(
+                function (resultado) {
+                    if (resultado.status == 200 || resultado.status == 201) {
+                        return resultado.json()
+                    }
+                    else {
+                        throw resultado
+                    }
+                }
+            )
+            .then(
+                function (resultado) {
+                    console.log(resultado.completed);
+                    resultado.completed == true ? ulDone.append(currentLi) : divTasks.append(currentLi), currentLi.style.textDecoration = "none"
+                }
+            )
+            .catch(
+                function (erro) {
+                    console.error(erro);
 
-        }
+                })
+
         changingTitleBackground()
     }
-    function saveTaskData(value, date) {
-        date = new Date().toUTCString();
-        let newTask = {
-            id: `${taskData.length}`,
-            name: `${value}`,
-            date: `${date}`,
-            done: false,
+    function sendTasks(description) {
+        console.log(description);
+        const body = {
+            description: `${description}`,
+            completed: false
         }
-        taskData.push(newTask)
-        localStorage.setItem("taskData", JSON.stringify(taskData))
+        let request = {
+            method: 'POST',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body),
+            redirect: 'follow'
+        }
+        fetch(`${baseUrl()}/tasks`, request)
+            .then(
+                function (resultado) {
+                    if (resultado.status == 200 || resultado.status == 201) {
+                        return resultado.json()
+                    }
+                    else {
+                        throw resultado
+                    }
+                }
+            )
+            .then(
+                function (resultado) {
+                    createTasks(description, resultado.createdAt, resultado.completed, resultado.id)
+                }
+            )
+            .catch(
+                function (erro) {
+                    console.error(erro);
+
+                })
     }
+
+    function getTasks() {
+        let request = {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+    
+            },
+            redirect: 'follow'
+        }
+        fetch(`${baseUrl()}/tasks`, request)
+            .then(
+                function (resultado) {
+                    if (resultado.status == 200 || resultado.status == 201) {
+                        return resultado.json()
+                    }
+                    else {
+                        throw resultado
+                    }
+                }
+            )
+            .then(
+                function (resultado) {
+                    if (resultado) {
+                        resultado.forEach(element => {
+                            createTasks(element.description, element.createdAt, element.completed, element.id)
+                        });
+                        console.log(resultado);
+                    }
+                }
+            )
+        // .catch(
+        //     function (erro) {
+        //         loginErro(erro)
+        //     }
+        // )
+    }
+
     reloadTasks()
+    loadingAnimation()
 
 
 }
+
