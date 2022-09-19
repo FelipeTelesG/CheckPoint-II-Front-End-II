@@ -45,11 +45,6 @@ botao.addEventListener("click", (evento) => {
     console.log("Base de dados", baseDeDados)
 
     salvarCadastro(objeto)
-
-
-
-
-
 });
 
 
@@ -67,17 +62,10 @@ Nome.addEventListener("blur", (evento) => {
         liberaBotao[0] = false;
     }
 
-
-
-
-
     if (liberaBotao.every(item => item)) botao.removeAttribute("disabled");
     else botao.setAttribute("disabled", "disabled");
 
 });
-
-
-
 
 sobrenome.addEventListener("blur", (evento) => {
 
@@ -91,10 +79,6 @@ sobrenome.addEventListener("blur", (evento) => {
 
         liberaBotao[1] = false;
     }
-
-
-
-
 
     if (liberaBotao.every(item => item)) botao.removeAttribute("disabled");
     else botao.setAttribute("disabled", "disabled");
@@ -216,7 +200,7 @@ botao.addEventListener("click", (evento) => {
             function (resultado) {
                 console.log(resultado);
                 sessionStorage.setItem("jwt-cadastro", resultado.jwt)
-
+                window.location = "tarefas.html"
             }
         )
         .catch(
