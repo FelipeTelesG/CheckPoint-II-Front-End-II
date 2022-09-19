@@ -14,7 +14,8 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://unpkg.com/jwt-decode/build/jwt-decode.js"></script>
   <script src="./scripts/index.js" defer></script>
-  
+
+
 </head>
 
 <body>
@@ -30,85 +31,90 @@
       <h1>Acessar</h1>
       <label>
         Email:
-        <input id="inputEmail" type="email" onchange="verificaEmail()"  required>
+        <input id="inputEmail" type="email" onchange="verificaEmail()" required>
         <small></small>
       </label>
       <label>
         Senha:
         <input id="inputPassword" type="password" onkeyup="verificaSenha()" required>
         <small></small>
-      
+
       </label>
 
-      <button type="button" id="botao" onclick="entrar()" disabled = true>Acessar</button>
-      <div id="buttonDiv"></div> 
+      <button type="button" id="botao" onclick="entrar()" disabled=true>Acessar</button>
+      <div id="buttonDiv"></div>
     </form>
     <div class="ingressar">
       <a href="signup.html">Não possui conta? Crie agora mesmo</a>
     </div>
-   
+
   </div>
-  
+
   <script>
     function handleCredentialResponse(response) {
       const data = jwt_decode(response.credential)
-  
+
       let firstName = data.given_name;
       let lastName = data.family_name;
       let email = data.email;
       let password = data.sub;
       let foto = data.picture;
 
-  //Realizar Login Google
+      sessionStorage.setItem("nome", `${firstName} ${lastName}`)
+      sessionStorage.setItem("foto", `${foto}`)
 
-  let loginGoogle = {
-    email: "",
-    password:""
-  }
+      //Realizar Login Google
 
-  loginGoogle.email = email
-  loginGoogle.password = password
+      let loginGoogle = {
+        email: "",
+        password: ""
+      }
 
-  let loginUsuarioGoogleJson = "";
+      loginGoogle.email = email
+      loginGoogle.password = password
 
-  loginUsuarioGoogleJson = JSON.stringify(loginGoogle);
+      let loginUsuarioGoogleJson = "";
+
+      loginUsuarioGoogleJson = JSON.stringify(loginGoogle);
 
 
-  function loginApi(loginUsuarioGoogleJson){
-    let request = {
-      method: "POST",
-      headers:{
-        'Content-type':'application/json'
-      },
-      body: loginUsuarioGoogleJson
-  }
-
-fetch(`${baseUrl()}/users/login`, request)
-  .then(
-      function (resultado){
-        if(resultado.status == 200 || resultado.status == 201){
-          return resultado.json()
+      function loginApi(loginUsuarioGoogleJson) {
+        let request = {
+          method: "POST",
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: loginUsuarioGoogleJson
         }
-        else{
-          throw resultado
-        }
-      }
-    )
-    .then(
-      function (resultado){
-       console.log(resultado)
-      }
-    )
-    .catch(
-      function(erro){
-        console.log(erro)
-      }
-    )
-  }
 
-     //Cadastrar Usuário utilizando o Google
+        fetch(`${baseUrl()}/users/login`, request)
+          .then(
+            function (resultado) {
+              if (resultado.status == 200 || resultado.status == 201) {
+                return resultado.json()
+              }
+              else {
+                throw resultado
+              }
+            }
+          )
+          .then(
+            function (resultado) {
+              console.log(resultado)
+              sessionStorage.setItem("jwt", resultado.jwt)
+              window.location = "tarefas.html"
+            }
+          )
+          .catch(
+            function (erro) {
+              console.log(erro)
+            }
+          )
+      }
 
-     let dadosCadastro = {
+      //Cadastrar Usuário utilizando o Google
+
+      let dadosCadastro = {
         firstName: firstName,
         lastName: lastName,
         email: email,
@@ -117,30 +123,30 @@ fetch(`${baseUrl()}/users/login`, request)
       dadosCadastroJson = JSON.stringify(dadosCadastro);
 
       let request = {
-      method: "POST",
-      headers:{
-      'Content-type':'application/json'
-    },
-    body: dadosCadastroJson
-  }
+        method: "POST",
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: dadosCadastroJson
+      }
 
-  fetch(`${baseUrl()}/users`, request)
-    .then(
-        function (resultado){
-          if(resultado.status == 200 || resultado.status == 201){
-            return resultado.json()
+      fetch(`${baseUrl()}/users`, request)
+        .then(
+          function (resultado) {
+            if (resultado.status == 200 || resultado.status == 201) {
+              return resultado.json()
+            }
+            else {
+              loginApi(loginUsuarioGoogleJson)
+            }
           }
-          else{
-            loginApi(loginUsuarioGoogleJson)
+        ).catch(
+          function (erro) {
+            console.log(erro)
           }
-        }
-      ).catch(
-        function(erro){
-          console.log(erro)
-        }
-      )
+        )
     }
-    
+
     //API Google
 
     window.onload = function () {
@@ -155,10 +161,10 @@ fetch(`${baseUrl()}/users/login`, request)
       google.accounts.id.prompt(); // also display the One Tap dialog
     }
 
-    function baseUrl(){
+    function baseUrl() {
       return "https://ctd-todo-api.herokuapp.com/v1"
     }
-</script>
+  </script>
 </body>
 
 </html>

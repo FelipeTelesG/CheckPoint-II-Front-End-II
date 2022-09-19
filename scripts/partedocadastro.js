@@ -224,6 +224,7 @@ botao.addEventListener("click", (evento) => {
                 console.log(erro)
             }
         )
+        location = "index.html"
 
 })
 

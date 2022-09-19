@@ -14,7 +14,7 @@ window.onload = () => {
 
     let token = JSON.parse(sessionStorage.getItem('jwt'))
     let imagemUser = document.querySelector("#imagem-user")
-    imagemUser.src = "https://tm.ibxk.com.br/2017/06/22/22100428046161.jpg"
+    // imagemUser.src = "https://tm.ibxk.com.br/2017/06/22/22100428046161.jpg"
 
     function baseUrl() {
         return "https://ctd-todo-api.herokuapp.com/v1"
@@ -53,6 +53,7 @@ window.onload = () => {
     function reloadTasks() {
         changingTitleBackground()
         getTasks()
+        getUserName()
     }
 
     function createTasks(name, timestamp, done, id) {
@@ -77,6 +78,12 @@ window.onload = () => {
         }
         liElement.addEventListener('click', doneTask)
         document.forms[0].reset()
+    }
+    function renderUserName(json) {
+        let userName = document.getElementById("usuario");
+        userName.innerText = `${json.firstName} ${json.lastName}`
+        
+        
     }
    
     function doneTask(event) {
@@ -122,7 +129,9 @@ window.onload = () => {
         changingTitleBackground()
     }
     function sendTasks(description) {
-        console.log(description);
+        if(!description) {
+            return
+        }
         const body = {
             description: `${description}`,
             completed: false
@@ -158,13 +167,37 @@ window.onload = () => {
 
                 })
     }
-
+    function getUserName() {
+        let request = {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
+    
+            },
+            redirect: 'follow'
+        }
+        fetch(`${baseUrl()}/users/getMe`, request)
+        .then(
+            function (response) {
+                if (response.status == 200 || response.status == 201) {
+                    return response.json()
+                }
+                else {
+                    throw response
+                }
+            }
+        )
+        .then(
+            function (response) {
+                renderUserName(response)
+            }
+        )
+    }
     function getTasks() {
         let request = {
             method: 'GET',
             headers: {
                 'Authorization': token,
-                'Content-Type': 'application/json'
     
             },
             redirect: 'follow'
