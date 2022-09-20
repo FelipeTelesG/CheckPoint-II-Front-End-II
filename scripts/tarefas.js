@@ -1,4 +1,6 @@
 window.onload = () => {
+    let root = document.querySelector(":root")
+    let body = document.querySelector('body')
 
     let ulDone = document.querySelector(".tarefas-terminadas")
     let divTasks = document.querySelector(".divTasks");
@@ -15,6 +17,9 @@ window.onload = () => {
     let token = JSON.parse(sessionStorage.getItem('jwt'))
     let userImage = document.querySelector("#imagem-user")
     let userName = document.getElementById("usuario");
+    
+    let toggleMode = document.getElementById("toggleMode")
+    toggleMode.addEventListener("click", switchMode)
 
     function baseUrl() {
         return "https://ctd-todo-api.herokuapp.com/v1"
@@ -35,26 +40,56 @@ window.onload = () => {
             ulDone.removeAttribute("id")
         }, 1000)
     }
-    function changingTitleBackground() {
+    function changeColors() {
         if (ulDone.children.length == 0) {
-            tituloTerminadas.style.backgroundColor = "white"
-            tituloTerminadas.style.color = "rgb(170, 170, 170)"
+            if (tituloTerminadas.classList.contains('dark-title')) {
+                tituloTerminadas.style.backgroundColor = "white"; tituloTerminadas.style.color = "black"
+            } else {
+                tituloTerminadas.style.backgroundColor = "white"
+                tituloTerminadas.style.color = "rgb(170, 170, 170)"
+            }
         }
         else {
-            tituloTerminadas.style.backgroundColor = "#7b90f6"; tituloTerminadas.style.color = "white"
+            if (tituloTerminadas.classList.contains('dark-title')) {
+                console.log(tituloTerminadas.classList.contains('dark-title'));
+                tituloTerminadas.style.backgroundColor = "#373940"; tituloTerminadas.style.color = "white"
+
+
+            } else {
+                tituloTerminadas.style.backgroundColor = "#7e8aef"; tituloTerminadas.style.color = "white"
+
+
+            }
 
         }
+    }
+    function switchMode() {
+        body.classList.toggle('dark-body')
+        root.classList.toggle("dark")
+        tituloTerminadas.classList.toggle("dark-title")
+        localStorage.setItem("hasDarkMode", `${body.classList.contains('dark-body')}`)
+        changeColors()
+    }
+    function savedMode(){
+        if(JSON.parse(localStorage.getItem("hasDarkMode"))) {
+            body.classList.add('dark-body')
+            root.classList.add("dark")
+            tituloTerminadas.classList.add("dark-title")
+            toggleMode.checked = "true"
+        }
+
     }
 
     function addButtonEvents(event) {
         event.preventDefault()
         sendTasks(novaTarefa.value)
-        
+
     }
     function reloadPageInformations() {
         getUserName()
         getTasks()
         loadingAnimation()
+        savedMode()
 
     }
 
@@ -80,7 +115,7 @@ window.onload = () => {
         }
         liElement.addEventListener('click', doneTask)
         document.forms[0].reset()
-        changingTitleBackground()
+        changeColors()
 
     }
     function renderUserProfile(json) {
@@ -120,7 +155,7 @@ window.onload = () => {
                 function (resultado) {
                     console.log(resultado.completed);
                     resultado.completed == true ? ulDone.append(currentLi) : divTasks.append(currentLi), currentLi.style.textDecoration = "none"
-                    changingTitleBackground()
+                    changeColors()
 
                 }
             )

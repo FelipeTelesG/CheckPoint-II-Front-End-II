@@ -7,6 +7,7 @@ header {
   margin-bottom: 2em;
 }
 
+
 a {
   display: block;
   width: fit-content;
@@ -58,7 +59,6 @@ a {
 }
 
 /* Nova tarefa ----------------------------------------------------------- */
-
 .nova-tarefa {
   position: relative;
   display: flex;
@@ -71,6 +71,7 @@ a {
   border-radius: .2em;
   z-index: 20;
 }
+
 
 .nova-tarefa input[type=text] {
   border: none;
@@ -200,7 +201,7 @@ a {
   width: 8em;
   text-align: center;
   padding: .5em 1em;
-  background-color: white;
+  /* background-color: white; */
   border-radius: .2em;
   box-shadow: 3px 3px 5px lightgrey;
   color: rgb(170, 170, 170);
@@ -252,4 +253,64 @@ a {
 @keyframes trasparencia {
   0%{ opacity: 0.5;}
   100%{ opacity: 0.8;}
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  margin-left: 12px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #2196F3;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 23px;
+  width: 23px;
+  left: -3px;
+  bottom: 0px;
+  background-color: rgb(255, 255, 255);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #575b66;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
