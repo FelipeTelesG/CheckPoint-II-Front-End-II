@@ -5,6 +5,12 @@
   --secondary: #8E64C5;
   --app-grey: #F2F2F2;
 }
+:root.dark {
+  --primary: #20232a;
+  --secondary: #282c34;
+  --app-grey: black;
+
+}
 
 * {
   margin: 0;
@@ -13,7 +19,11 @@
 }
 
 body {
-  background-color: #F6F6F6;
+  background-color: #FFFF;
+  min-height: 100vh;
+}
+body.dark-body {
+  background-color: #f6f6f6;
   min-height: 100vh;
 }
 

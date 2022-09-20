@@ -1,16 +1,4 @@
 
-// Página de Registro
-
-//  - Ambos os campos devem ser normalizados (ex: retirar espaços desnecessários);
-
-//  - Nenhum dos campos pode ser vazio/nulo;
-
-//  - O email deve ser de um tipo válido (ex: aplicar expressões regulares);
-
-//  - Os campos “senha” e “repetir senha” devem possuir a mesma informação para serem considerados válidos;
-
-//  - O botão de cadastro deve ser habilitado apenas quando todos os campos do formulário estiverem validados corretamente.
-
 function removeespaco(valor) {
     return valor.trim()
 }

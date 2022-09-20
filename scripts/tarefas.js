@@ -1,30 +1,35 @@
 window.onload = () => {
+    let root = document.querySelector(":root")
+    let body = document.querySelector('body')
 
     let ulDone = document.querySelector(".tarefas-terminadas")
     let divTasks = document.querySelector(".divTasks");
     let novaTarefa = document.getElementById("novaTarefa")
-   
+
     let tituloTerminadas = document.querySelector(".titulo-terminadas")
-    
+
     let closeApp = document.querySelector("#closeApp")
     closeApp.addEventListener('click', endSession)
-    
+
     let button = document.querySelector("button")
     button.addEventListener('click', addButtonEvents)
 
     let token = JSON.parse(sessionStorage.getItem('jwt'))
-    let imagemUser = document.querySelector("#imagem-user")
-    imagemUser.src = "https://tm.ibxk.com.br/2017/06/22/22100428046161.jpg"
+    let userImage = document.querySelector("#imagem-user")
+    let userName = document.getElementById("usuario");
+    
+    let toggleMode = document.getElementById("toggleMode")
+    toggleMode.addEventListener("click", switchMode)
 
     function baseUrl() {
         return "https://ctd-todo-api.herokuapp.com/v1"
     }
-    
+
     function endSession(event) {
         event.preventDefault;
         sessionStorage.clear()
         location = "index.html"
-        
+
     }
 
     function loadingAnimation() {
@@ -35,24 +40,57 @@ window.onload = () => {
             ulDone.removeAttribute("id")
         }, 1000)
     }
-    function changingTitleBackground() {
+    function changeColors() {
         if (ulDone.children.length == 0) {
-            tituloTerminadas.style.backgroundColor = "white"
-            tituloTerminadas.style.color = "rgb(170, 170, 170)"
+            if (tituloTerminadas.classList.contains('dark-title')) {
+                tituloTerminadas.style.backgroundColor = "white"; tituloTerminadas.style.color = "black"
+            } else {
+                tituloTerminadas.style.backgroundColor = "white"
+                tituloTerminadas.style.color = "rgb(170, 170, 170)"
+            }
         }
         else {
-            tituloTerminadas.style.backgroundColor = "#7b90f6"; tituloTerminadas.style.color = "white"
+            if (tituloTerminadas.classList.contains('dark-title')) {
+                console.log(tituloTerminadas.classList.contains('dark-title'));
+                tituloTerminadas.style.backgroundColor = "#373940"; tituloTerminadas.style.color = "white"
+
+
+            } else {
+                tituloTerminadas.style.backgroundColor = "#7e8aef"; tituloTerminadas.style.color = "white"
+
+
+            }
 
         }
+    }
+    function switchMode() {
+        body.classList.toggle('dark-body')
+        root.classList.toggle("dark")
+        tituloTerminadas.classList.toggle("dark-title")
+        localStorage.setItem("hasDarkMode", `${body.classList.contains('dark-body')}`)
+        changeColors()
+    }
+    function savedMode(){
+        if(JSON.parse(localStorage.getItem("hasDarkMode"))) {
+            body.classList.add('dark-body')
+            root.classList.add("dark")
+            tituloTerminadas.classList.add("dark-title")
+            toggleMode.checked = "true"
+        }
+
     }
 
     function addButtonEvents(event) {
         event.preventDefault()
         sendTasks(novaTarefa.value)
+
     }
-    function reloadTasks() {
-        changingTitleBackground()
+    function reloadPageInformations() {
+        getUserName()
         getTasks()
+        loadingAnimation()
+        savedMode()
+
     }
 
     function createTasks(name, timestamp, done, id) {
@@ -77,8 +115,14 @@ window.onload = () => {
         }
         liElement.addEventListener('click', doneTask)
         document.forms[0].reset()
+        changeColors()
+
     }
-   
+    function renderUserProfile(json) {
+        userName.innerText = `${json.firstName} ${json.lastName}`
+        userImage.setAttribute("src", `https://avatars.dicebear.com/api/bottts/${json.lastName}.svg`)
+    }
+
     function doneTask(event) {
         let currentLi = event.currentTarget
         currentLi.classList.toggle("done")
@@ -111,6 +155,8 @@ window.onload = () => {
                 function (resultado) {
                     console.log(resultado.completed);
                     resultado.completed == true ? ulDone.append(currentLi) : divTasks.append(currentLi), currentLi.style.textDecoration = "none"
+                    changeColors()
+
                 }
             )
             .catch(
@@ -119,10 +165,11 @@ window.onload = () => {
 
                 })
 
-        changingTitleBackground()
     }
     function sendTasks(description) {
-        console.log(description);
+        if (description.trim() == '') {
+            return
+        }
         const body = {
             description: `${description}`,
             completed: false
@@ -158,14 +205,38 @@ window.onload = () => {
 
                 })
     }
+    function getUserName() {
+        let request = {
+            method: 'GET',
+            headers: {
+                'Authorization': token,
 
+            },
+            redirect: 'follow'
+        }
+        fetch(`${baseUrl()}/users/getMe`, request)
+            .then(
+                function (response) {
+                    if (response.status == 200 || response.status == 201) {
+                        return response.json()
+                    }
+                    else {
+                        throw response
+                    }
+                }
+            )
+            .then(
+                function (response) {
+                    renderUserProfile(response)
+                }
+            )
+    }
     function getTasks() {
         let request = {
             method: 'GET',
             headers: {
                 'Authorization': token,
-                'Content-Type': 'application/json'
-    
+
             },
             redirect: 'follow'
         }
@@ -196,9 +267,7 @@ window.onload = () => {
         //     }
         // )
     }
-
-    reloadTasks()
-    loadingAnimation()
+    reloadPageInformations()
 
 
 }

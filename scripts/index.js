@@ -104,7 +104,8 @@ function loginApi(loginUsuarioJson){
       )
       .then(
         function (resultado){
-          sessionStorage.setItem("jwt", resultado.jwt)
+          console.log(resultado);
+          sessionStorage.setItem("jwt", JSON.stringify(resultado.jwt))
           window.location = "tarefas.html"
         }
       )
@@ -138,4 +139,3 @@ function setSuccessFor(input) {
 
   formControl.className = 'form-control success'
 }
-
