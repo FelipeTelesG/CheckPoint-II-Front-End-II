@@ -3,28 +3,28 @@ window.onload = () => {
     let ulDone = document.querySelector(".tarefas-terminadas")
     let divTasks = document.querySelector(".divTasks");
     let novaTarefa = document.getElementById("novaTarefa")
-   
+
     let tituloTerminadas = document.querySelector(".titulo-terminadas")
-    
+
     let closeApp = document.querySelector("#closeApp")
     closeApp.addEventListener('click', endSession)
-    
+
     let button = document.querySelector("button")
     button.addEventListener('click', addButtonEvents)
 
     let token = JSON.parse(sessionStorage.getItem('jwt'))
-    let imagemUser = document.querySelector("#imagem-user")
-    // imagemUser.src = "https://tm.ibxk.com.br/2017/06/22/22100428046161.jpg"
+    let userImage = document.querySelector("#imagem-user")
+    let userName = document.getElementById("usuario");
 
     function baseUrl() {
         return "https://ctd-todo-api.herokuapp.com/v1"
     }
-    
+
     function endSession(event) {
         event.preventDefault;
         sessionStorage.clear()
         location = "index.html"
-        
+
     }
 
     function loadingAnimation() {
@@ -49,11 +49,13 @@ window.onload = () => {
     function addButtonEvents(event) {
         event.preventDefault()
         sendTasks(novaTarefa.value)
+        
     }
-    function reloadTasks() {
-        changingTitleBackground()
-        getTasks()
+    function reloadPageInformations() {
         getUserName()
+        getTasks()
+        loadingAnimation()
+
     }
 
     function createTasks(name, timestamp, done, id) {
@@ -78,14 +80,14 @@ window.onload = () => {
         }
         liElement.addEventListener('click', doneTask)
         document.forms[0].reset()
+        changingTitleBackground()
+
     }
-    function renderUserName(json) {
-        let userName = document.getElementById("usuario");
+    function renderUserProfile(json) {
         userName.innerText = `${json.firstName} ${json.lastName}`
-        
-        
+        userImage.setAttribute("src", `https://avatars.dicebear.com/api/bottts/${json.lastName}.svg`)
     }
-   
+
     function doneTask(event) {
         let currentLi = event.currentTarget
         currentLi.classList.toggle("done")
@@ -118,6 +120,8 @@ window.onload = () => {
                 function (resultado) {
                     console.log(resultado.completed);
                     resultado.completed == true ? ulDone.append(currentLi) : divTasks.append(currentLi), currentLi.style.textDecoration = "none"
+                    changingTitleBackground()
+
                 }
             )
             .catch(
@@ -126,10 +130,9 @@ window.onload = () => {
 
                 })
 
-        changingTitleBackground()
     }
     function sendTasks(description) {
-        if(!description) {
+        if (description.trim() == '') {
             return
         }
         const body = {
@@ -172,33 +175,33 @@ window.onload = () => {
             method: 'GET',
             headers: {
                 'Authorization': token,
-    
+
             },
             redirect: 'follow'
         }
         fetch(`${baseUrl()}/users/getMe`, request)
-        .then(
-            function (response) {
-                if (response.status == 200 || response.status == 201) {
-                    return response.json()
+            .then(
+                function (response) {
+                    if (response.status == 200 || response.status == 201) {
+                        return response.json()
+                    }
+                    else {
+                        throw response
+                    }
                 }
-                else {
-                    throw response
+            )
+            .then(
+                function (response) {
+                    renderUserProfile(response)
                 }
-            }
-        )
-        .then(
-            function (response) {
-                renderUserName(response)
-            }
-        )
+            )
     }
     function getTasks() {
         let request = {
             method: 'GET',
             headers: {
                 'Authorization': token,
-    
+
             },
             redirect: 'follow'
         }
@@ -229,9 +232,7 @@ window.onload = () => {
         //     }
         // )
     }
-
-    reloadTasks()
-    loadingAnimation()
+    reloadPageInformations()
 
 
 }
