@@ -21,6 +21,9 @@ window.onload = () => {
     let toggleMode = document.getElementById("toggleMode")
     toggleMode.addEventListener("click", switchMode)
 
+    let radioPendente = document.getElementById("radioPendente")
+    let radioConcluida = document.getElementById("radioConcluida")
+
     function baseUrl() {
         return "https://ctd-todo-api.herokuapp.com/v1"
     }
@@ -94,6 +97,7 @@ window.onload = () => {
     }
 
     function createTasks(name, timestamp, done, id) {
+        
         let liElement = document.createElement("li")
         liElement.classList.add("tarefa")
         liElement.setAttribute("id", `${id}`)
@@ -105,7 +109,7 @@ window.onload = () => {
               <p class="timestamp">Criada em: ${timestamp}</p>
             </div>
           `
-        if (done == true) {
+        if (done == true || radioConcluida.checked == true) {
             ulDone.append(liElement)
             liElement.style.textDecoration = "line-through"
             liElement.classList.add("done")
@@ -174,6 +178,10 @@ window.onload = () => {
             description: `${description}`,
             completed: false
         }
+        if(radioConcluida.checked == true) {
+            body.completed = true
+        }
+
         let request = {
             method: 'POST',
             headers: {
