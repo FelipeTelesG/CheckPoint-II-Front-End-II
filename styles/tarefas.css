@@ -314,3 +314,11 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+#radioPendente {
+  margin: 3px;
+}
+#radioConcluida {
+  margin: 4px;
+  margin-left: 8px;
+}
