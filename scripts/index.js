@@ -1,5 +1,38 @@
 let botao = document.getElementById("botao");
 
+const tempoDeCarga = 5000;
+ 
+function animarBarra() {
+  // Selecionamos o elemento barra
+  let elem = document.getElementById("#barra-de-carregamento").style.display = "block";
+
+    // Inicializamos o processo em 0, para assegurarmos
+  // que sempre começará do zero
+  let width = 0;
+ 
+  // Calculamos o progresso com base no tempo total da carga
+  const progressoSobreTempoTotal = tempoDeCarga / 100;
+ 
+  // Criamos um intervalo que se repete no tempo que calculamos
+  // para ir incrementando o progresso.
+  let id = setInterval(incrementarProgresso, progressoSobreTempoTotal);
+ 
+  function incrementarProgresso() {
+    // Se o progresso estiver completo…
+    if (width >= 100) {
+      clearInterval(id);
+    } else {
+      width++;
+ 
+      // Modificamos o DOM, para impactar no novo progresso.
+      elem.style.width = width + "%";
+      elem.innerHTML = width + "%";
+    }
+  }
+}
+ 
+
+
 function desativaBotao(emailClean, senhaClean) {
   if (emailClean == '' || senhaClean == '') {
     botao.disabled = true;
@@ -106,7 +139,11 @@ function loginApi(loginUsuarioJson){
         function (resultado){
           console.log(resultado);
           sessionStorage.setItem("jwt", JSON.stringify(resultado.jwt))
-          window.location = "tarefas.html"
+          
+          setTimeout(() =>{
+            window.location = "tarefas.html"
+          }, 2000)
+
         }
       )
       .catch(
@@ -138,4 +175,15 @@ function setSuccessFor(input) {
   const formControl = input.parentElement;
 
   formControl.className = 'form-control success'
+}
+
+function exibeSpinner(){
+  let div = document.createElement("div");
+  div.classList.add("loader")
+  botao.innerText = ""
+  botao.appendChild(div);
+}
+
+function ocultaSpinner(){
+
 }

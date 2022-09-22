@@ -17,6 +17,7 @@
 </head>
 
 <body>
+
   <div class="left">
     <img src="./assets/pessoa-login.png" alt="">
   </div>
@@ -39,7 +40,7 @@
 
       </label>
 
-      <button type="button" id="botao" onclick="entrar()" disabled=true>Acessar</button>
+      <button type="button" id="botao" onclick="entrar() ,exibeSpinner()" disabled=true>Acessar</button>
       <div id="buttonDiv"></div>
     </form>
     <div class="ingressar">
@@ -75,7 +76,6 @@
 
       loginUsuarioGoogleJson = JSON.stringify(loginGoogle);
 
-
       function loginApi(loginUsuarioGoogleJson) {
         let request = {
           method: "POST",
@@ -98,8 +98,8 @@
           )
           .then(
             function (resultado) {
-              console.log(resultado)
-              sessionStorage.setItem("jwt", resultado.jwt)
+              let jwt = JSON.stringify(resultado.jwt)
+              sessionStorage.setItem("jwt", jwt)
               window.location = "tarefas.html"
             }
           )
@@ -160,7 +160,7 @@
     }
 
     function baseUrl() {
-      return "https://ctd-todo-api.herokuapp.com/v1"
+      return "https://ctd-fe2-todo-v2.herokuapp.com/v1"
     }
   </script>
 </body>

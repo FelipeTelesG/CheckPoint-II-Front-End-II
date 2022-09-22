@@ -167,7 +167,7 @@ repetirsenha.addEventListener("blur", (evento) => {
 
 
 function baseUrl() {
-    return "https://ctd-todo-api.herokuapp.com/v1"
+    return "https://ctd-fe2-todo-v2.herokuapp.com/v1"
 }
 
 

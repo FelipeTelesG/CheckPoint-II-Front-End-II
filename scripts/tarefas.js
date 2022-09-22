@@ -14,7 +14,9 @@ window.onload = () => {
     let button = document.querySelector("button")
     button.addEventListener('click', addButtonEvents)
 
-    let token = JSON.parse(sessionStorage.getItem('jwt'))
+    let token = JSON.parse(sessionStorage.getItem('jwt'));
+    
+
     let userImage = document.querySelector("#imagem-user")
     let userName = document.getElementById("usuario");
     
@@ -90,7 +92,6 @@ window.onload = () => {
         getTasks()
         loadingAnimation()
         savedMode()
-
     }
 
     function createTasks(name, timestamp, done, id) {

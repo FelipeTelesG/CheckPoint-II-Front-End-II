@@ -2,6 +2,9 @@
 
 body{
   display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
 }
 
 h1 {
@@ -21,6 +24,21 @@ form {
   box-shadow: 0 5px 5px lightgrey;
   padding: 1em 2.5em;
   box-sizing: border-box;
+}
+
+.loader {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  z-index: 4;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 form:after {
