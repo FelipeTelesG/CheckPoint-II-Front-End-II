@@ -183,7 +183,3 @@ function exibeSpinner(){
   botao.innerText = ""
   botao.appendChild(div);
 }
-
-function ocultaSpinner(){
-
-}

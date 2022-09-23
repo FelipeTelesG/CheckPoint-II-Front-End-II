@@ -39,7 +39,11 @@ const listaCadastro = [];
 //    }
 
 botao.addEventListener("click", (evento) => {
-    location = "index.html" 
+    setTimeout(() =>{
+        location = "index.html" 
+      }, 2000)
+
+      exibeSpinner()
 
     evento.preventDefault();
 
@@ -226,6 +230,13 @@ botao.addEventListener("click", (evento) => {
         )
 
 })
+
+function exibeSpinner(){
+    let div = document.createElement("div");
+    div.classList.add("loader")
+    botao.innerText = ""
+    botao.appendChild(div);
+  }
 
 
 
