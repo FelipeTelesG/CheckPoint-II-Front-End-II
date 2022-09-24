@@ -27,7 +27,7 @@ window.onload = () => {
     let radioConcluida = document.getElementById("radioConcluida")
 
     function baseUrl() {
-        return "https://ctd-todo-api.herokuapp.com/v1"
+        return "https://ctd-fe2-todo-v2.herokuapp.com/v1"
     }
 
     function endSession(event) {

@@ -51,13 +51,7 @@ botao.addEventListener("click", (evento) => {
 
     salvarCadastro(objeto)
 
-
-
-
-
 });
-
-
 
 Nome.addEventListener("blur", (evento) => {
 
@@ -72,16 +66,10 @@ Nome.addEventListener("blur", (evento) => {
         liberaBotao[0] = false;
     }
 
-
-
-
-
     if (liberaBotao.every(item => item)) botao.removeAttribute("disabled");
     else botao.setAttribute("disabled", "disabled");
 
 });
-
-
 
 
 sobrenome.addEventListener("blur", (evento) => {
@@ -97,10 +85,6 @@ sobrenome.addEventListener("blur", (evento) => {
         liberaBotao[1] = false;
     }
 
-
-
-
-
     if (liberaBotao.every(item => item)) botao.removeAttribute("disabled");
     else botao.setAttribute("disabled", "disabled");
 
@@ -112,10 +96,14 @@ email.addEventListener("blur", (evento) => {
 
     if (emailCapturado) {
         objeto.email = email.value;
-
+        email.classList.remove("invalid")
+        email.classList.add("valid")
+        setSuccessFor(email)
         liberaBotao[2] = true;
     } else {
-
+        email.classList.remove("valid")
+        email.classList.add("invalid")
+        setErrorFor(email, "Insira um e-mail Válido!")
         liberaBotao[2] = false;
     }
 
@@ -136,7 +124,7 @@ senha.addEventListener("blur", (evento) => {
 
         liberaBotao[3] = true;
     }
-
+    
     console.log("REPETIR_SENHA", objeto.repetirsenha)
 
     if (objeto.repetirsenha) {
@@ -160,8 +148,22 @@ repetirsenha.addEventListener("blur", (evento) => {
         objeto.repetirsenha = repetirsenha.value;
     }
 
-    if (senha.value === repetirsenha.value) liberaBotao[4] = true;
-    else liberaBotao[4] = false;
+    if (senha.value === repetirsenha.value){
+        liberaBotao[4] = true;
+        senha.classList.remove("invalid")
+        senha.classList.add("valid")
+        repetirsenha.classList.remove("invalid")
+        repetirsenha.classList.add("valid")
+        setSuccessFor(repetirsenha)
+    } 
+    else{
+        liberaBotao[4] = false
+        senha.classList.remove("valid")
+        senha.classList.add("invalid")
+        repetirsenha.classList.remove("valid")
+        repetirsenha.classList.add("invalid")
+        setErrorFor(repetirsenha, "As senhas devem ser Iguais!")
+    }
 
     if (liberaBotao.every((item) => item)) botao.removeAttribute("disabled");
     else botao.setAttribute("disabled", "disabled");
@@ -198,7 +200,7 @@ botao.addEventListener("click", (evento) => {
 
 
 
-    fetch("https://ctd-todo-api.herokuapp.com/v1/users", request)
+    fetch("https://ctd-fe2-todo-v2.herokuapp.com/v1/users", request)
         .then(
             function (resultado) {
                 if (resultado.status == 200 || resultado.status == 201) {
@@ -206,8 +208,6 @@ botao.addEventListener("click", (evento) => {
                     return resultado.json()
 
                 } else if (resultado.status == 400) {
-
-
 
                     throw "O usuário já está cadastrado!";
 
@@ -228,8 +228,22 @@ botao.addEventListener("click", (evento) => {
                 console.log(erro)
             }
         )
-
 })
+
+function setErrorFor(input, message) {
+    const formControl = input.parentElement;
+    const small = formControl.querySelector('small')
+  
+    small.innerText = message
+  
+    formControl.className = 'form-control error'
+  }
+  
+  function setSuccessFor(input) {
+    const formControl = input.parentElement;
+  
+    formControl.className = 'form-control success'
+  }
 
 function exibeSpinner(){
     let div = document.createElement("div");
