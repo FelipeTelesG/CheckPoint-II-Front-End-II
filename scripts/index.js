@@ -117,6 +117,12 @@ function loginApi(loginUsuarioJson){
         function(erro){
           ocultaSpinner()
           loginErro(erro)
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Usuário não cadastrado!',
+            footer: '<a href="signup.html">Cadastre-se Agora</a>'
+          })
         }
       )
 }

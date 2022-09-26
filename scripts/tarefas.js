@@ -33,8 +33,20 @@ window.onload = () => {
     function endSession(event) {
         event.preventDefault;
         sessionStorage.clear()
-        location = "index.html"
-
+       
+        Swal.fire({
+            title: 'Deseja realmente sair?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                location = "index.html"
+            }
+          })
     }
 
     function loadingAnimation() {
@@ -43,7 +55,7 @@ window.onload = () => {
         setTimeout(() => {
             divTasks.removeAttribute("id")
             ulDone.removeAttribute("id")
-        }, 1000)
+        }, 2000)
     }
     function changeColors() {
         if (ulDone.children.length == 0) {

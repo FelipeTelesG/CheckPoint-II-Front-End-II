@@ -1,6 +1,5 @@
 import { removeespaco, vazio, ValidateEmail, Verificarsenha } from "./validacao.js";
 
-
 const botao = document.getElementById("botao");
 const Nome = document.getElementById("Nome");
 const sobrenome = document.getElementById("Sobrenome");
@@ -8,42 +7,26 @@ const email = document.getElementById("Email");
 const senha = document.getElementById("Senha");
 const repetirsenha = document.getElementById("RepetirSenha");
 
-
 const liberaBotao = [false, false, false, false, false];
 
 const objeto = {};
 
 const listaCadastro = [];
 
-// const baseDeDados = localStorage.getItem('objeto') || [];
-
-// function salvarCadastro(objeto){
-
-//     if(!baseDeDados.length) {
-
-//         listaCadastro.push(objeto);
-//         localStorage.setItem('objeto', JSON.stringify(listaCadastro));
-
-//     }else{
-
-//         const retornoStorage = JSON.parse(baseDeDados);
-
-//         retornoStorage.push(objeto);
-
-//          localStorage.setItem('objeto', JSON.stringify(retornoStorage));
-
-//     }
-
-
-
-//    }
-
 botao.addEventListener("click", (evento) => {
     setTimeout(() =>{
         location = "index.html" 
-      }, 2000)
+      }, 3000)
 
       exibeSpinner()
+
+      setTimeout(() =>{
+        Swal.fire(
+            'Good job!',
+            'Usuario cadastrado com sucesso!',
+            'success'
+          )
+      }, 1000)
 
     evento.preventDefault();
 
@@ -70,7 +53,6 @@ Nome.addEventListener("blur", (evento) => {
     else botao.setAttribute("disabled", "disabled");
 
 });
-
 
 sobrenome.addEventListener("blur", (evento) => {
 
@@ -107,8 +89,6 @@ email.addEventListener("blur", (evento) => {
         liberaBotao[2] = false;
     }
 
-
-
     if (liberaBotao.every(item => item)) botao.removeAttribute("disabled");
     else botao.setAttribute("disabled", "disabled");
 
@@ -127,13 +107,6 @@ senha.addEventListener("blur", (evento) => {
     
     console.log("REPETIR_SENHA", objeto.repetirsenha)
 
-    if (objeto.repetirsenha) {
-
-
-        if (objeto.senha === objeto.repetirsenha) liberaBotao[3] = true;
-        else liberaBotao[3] = false;
-    }
-
     if (liberaBotao.every((item) => item)) botao.removeAttribute("disabled");
     else botao.setAttribute("disabled", "disabled");
 
@@ -150,6 +123,7 @@ repetirsenha.addEventListener("blur", (evento) => {
 
     if (senha.value === repetirsenha.value){
         liberaBotao[4] = true;
+        liberaBotao[3] = true;
         senha.classList.remove("invalid")
         senha.classList.add("valid")
         repetirsenha.classList.remove("invalid")
@@ -176,7 +150,6 @@ function baseUrl() {
     return "https://ctd-fe2-todo-v2.herokuapp.com/v1"
 }
 
-
 botao.addEventListener("click", (evento) => {
     evento.preventDefault();
 
@@ -189,7 +162,6 @@ botao.addEventListener("click", (evento) => {
 
     console.log("OBJETO", objCaptura)
 
-
     let request = {
         method: "POST",
         headers: {
@@ -197,8 +169,6 @@ botao.addEventListener("click", (evento) => {
         },
         body: JSON.stringify(objCaptura),
     }
-
-
 
     fetch("https://ctd-fe2-todo-v2.herokuapp.com/v1/users", request)
         .then(
@@ -220,7 +190,6 @@ botao.addEventListener("click", (evento) => {
             function (resultado) {
                 console.log(resultado);
                 sessionStorage.setItem("jwt-cadastro", resultado.jwt)
-
             }
         )
         .catch(
@@ -251,7 +220,3 @@ function exibeSpinner(){
     botao.innerText = ""
     botao.appendChild(div);
   }
-
-
-
-
