@@ -97,17 +97,16 @@ input:focus {
 .form-control small {
   visibility: hidden;
   position: absolute;
-  margin-top: 5px;
+  margin-top: 2px;
   font-size: 12px;
-  margin-bottom: 4px;
-
+  margin-right: 4px;
 }
 
 label {
   width: 100%;
   font-weight: 300;
   margin-bottom: -.1em;
-  margin-top: 2em;
+  margin-top: 2.1em;
   font-size: .8em;
 }
 
