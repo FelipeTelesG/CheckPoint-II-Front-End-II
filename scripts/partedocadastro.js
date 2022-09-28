@@ -14,19 +14,7 @@ const objeto = {};
 const listaCadastro = [];
 
 botao.addEventListener("click", (evento) => {
-    setTimeout(() =>{
-        location = "index.html" 
-      }, 3000)
-
       exibeSpinner()
-
-      setTimeout(() =>{
-        Swal.fire(
-            'Good job!',
-            'Usuario cadastrado com sucesso!',
-            'success'
-          )
-      }, 1000)
 
     evento.preventDefault();
 
@@ -177,24 +165,38 @@ botao.addEventListener("click", (evento) => {
 
                     return resultado.json()
 
-                } else if (resultado.status == 400) {
-
-                    throw "O usuário já está cadastrado!";
-
                 } else {
-                    throw "Erro no servidor!";
+                    throw resultado
                 }
             }
         )
         .then(
             function (resultado) {
                 console.log(resultado);
+
+                setTimeout(() =>{
+                    Swal.fire(
+                        'Good job!',
+                        'Usuario cadastrado com sucesso!',
+                        'success'
+                      )
+                  }, 1000)
+
+                  setTimeout(() =>{
+                    location = "index.html" 
+                  }, 4000)
+
                 sessionStorage.setItem("jwt-cadastro", resultado.jwt)
             }
         )
         .catch(
             function (erro) {
-                console.log(erro)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Usuário já cadastrado!',
+                    footer: '<a href="index.html">Fazer Login</a>'
+                  })
             }
         )
 })
